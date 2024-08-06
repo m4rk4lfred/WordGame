@@ -5,7 +5,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Random;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,7 +30,7 @@ public class MainGameFrame extends JFrame {
   //SO THIS IS THE CHARACTERS THAT WILL BE INSERTED IN THE GRID
   char[][] guessWordCharacters = {
     {'B', 'L', 'I', 'Z', 'Z', 'A', 'R', 'D'},              // BLIZZARD
-    {'?', 'R', 'Y', 'P', 'T', 'I', 'C'},                   // CRYPTIC
+    {'C', 'R', 'Y', 'P', 'T', 'I', 'C'},                   // CRYPTIC
     {'M', 'Y', 'S', 'T', 'I', 'C', 'A', 'L'},              // MYSTICAL
     {'E', 'L', 'U', 'S', 'I', 'V', 'E'},                   // ELUSIVE
     {'P', 'U', 'Z', 'Z', 'L', 'I', 'N', 'G'},              // PUZZLING
@@ -80,7 +85,6 @@ public class MainGameFrame extends JFrame {
 		});
         //THIS WILL SHOW THE WORD THAT THE USER NEED TO GUESS
         guessWordToBeShow();
-
 		setResizable(false);
 		setTitle("Find the Word");
 		setFocusable(true);
@@ -98,6 +102,7 @@ public class MainGameFrame extends JFrame {
 	public void wordBox() {
 		JPanel gridWordBox = new JPanel();
 		gridWordBox.setBounds(10, 21, 466, 400);
+		gridWordBox.setBackground(Color.CYAN);
 		gridWordBox.setLayout(new GridLayout(14,14));
       
         //THIS WILL RANDOMLY INSERT THE CHARACTERS IN THE GRID
@@ -116,18 +121,20 @@ public class MainGameFrame extends JFrame {
 			//THIS RANDOM WILL RANDOMLY SELECT FROM THE ARRAY OF CHARACTERS THAT NEED TO BE GUESSED
 			Random generateCharHorizontally = new Random();
 	     	int characterInsertionToGrid = generateCharHorizontally.nextInt(9);
+			
 			characterInsertionCounter = 0;
 
 			//SO THIS FOR LOOP IS RESPONSIBLE FOR THE INSERTION OF THE CHARACTERS IN THE GRID
 			//THE GRID IS 14X14 SO I NEED TO LOOP 14 TIMES
-			for(int j = 0 ; j < 14 ; j++) {
+			for(int j = 0 ; j < 14  ; j++) {
 		       //THIS WILL PUT THE CHARACTER TO GUESS IN THE GRID
 			   if(letterPosition < j && characterInsertionCounter < guessWordCharacters[characterInsertionToGrid].length) {
-               JLabel wordBox = new JLabel(Character.toString(guessWordCharacters[characterInsertionToGrid][characterInsertionCounter]));
-			  // wordBox.setForeground(Color);
+              /*  JLabel wordBox = new JLabel(Character.toString(guessWordCharacters[characterInsertionToGrid][characterInsertionCounter]));
 			   wordBox.setHorizontalAlignment(SwingConstants.CENTER);
 			   wordBox.setFont(new Font("Haettenschweiler", Font.PLAIN, 28));
 			   gridWordBox.add(wordBox);
+			   */
+			   setWordArrangement(letterPosition, j, characterInsertionToGrid, gridWordBox);
 			   characterInsertionCounter++;
 
 			   }
@@ -154,6 +161,7 @@ public class MainGameFrame extends JFrame {
      
 	//THIS WILL CHECK THE WORD IF THE USER ENTERED THE WORD
     public void checkWord(){  
+		setSoundEffects();
 		 //THIS WILL GET THE WORD THAT THE USER ENTERED
 	  	 String userGuessWord = guessWordTextField.getText().toUpperCase();
 		 boolean isWrong = false;
@@ -242,5 +250,34 @@ public class MainGameFrame extends JFrame {
 		  contentPane.revalidate();
 		  contentPane.repaint();
 	}
+
+
+	public void setWordArrangement(int letterPosition, int j, int characterInsertionToGrid , JPanel gridWordBox){
+			if(letterPosition < j && characterInsertionCounter < guessWordCharacters[characterInsertionToGrid].length) {
+               JLabel wordBox = new JLabel(Character.toString(guessWordCharacters[characterInsertionToGrid][characterInsertionCounter]));
+			   wordBox.setHorizontalAlignment(SwingConstants.CENTER);
+			   wordBox.setFont(new Font("Haettenschweiler", Font.PLAIN, 28));
+			   gridWordBox.add(wordBox);
+	}
+
+	public void setSoundEffects(){
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\Lenovo\\Downloads\\Gameboy-Startup-Sound.wav")));
+			
+			clip.addLineListener(new LineListener(){
+				public void update(LineEvent event){
+					if(event.getType() == LineEvent.Type.STOP){
+						clip.close();
+					}
+				}
+			});
+			clip.start();
+		
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR IN PLAYING THE MUSIC", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
  }
 

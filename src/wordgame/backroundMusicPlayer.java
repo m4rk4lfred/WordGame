@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
@@ -30,7 +29,7 @@ public class backroundMusicPlayer {
    		
            clip = AudioSystem.getClip();
            if(!clip.isRunning()) {
-           clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\Lenovo\\Downloads\\Yoshi_s-Island-OST-Athletic.wav")));
+           clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\Lenovo\\Downloads\\Kirby_s-Adventure-_NES_-Music-Vegetable-Valley-3.wav")));
            clip.start();    
        }
          
