@@ -258,6 +258,7 @@ public class MainGameFrame extends JFrame {
 			   wordBox.setHorizontalAlignment(SwingConstants.CENTER);
 			   wordBox.setFont(new Font("Haettenschweiler", Font.PLAIN, 28));
 			   gridWordBox.add(wordBox);
+			}
 	}
 
 	public void setSoundEffects(){
