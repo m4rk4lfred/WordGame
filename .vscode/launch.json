@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "StartGame",
+            "request": "launch",
+            "mainClass": "WordGame/wordgame.StartGame",
+            "projectName": "WordGame_ba1f26ac"
+        },
+        {
+            "type": "java",
+            "name": "StartGame",
+            "request": "launch",
+            "mainClass": "WordGame/wordgame.StartGame",
+            "projectName": "WordGame"
+        },
+        {
+            "type": "jdk",
+            "request": "launch",
+            "name": "Launch Java App"
+        }
+    ]
+}
