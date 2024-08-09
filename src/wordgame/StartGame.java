@@ -32,6 +32,12 @@ public class StartGame {
         startGameFrame.setContentPane(contentPane);
        
         contentPane.add(musicBackroundButton);
+        
+        JLabel startLabel = new JLabel("");
+        startLabel.setBounds(50, 66, 385, 179);
+        contentPane.add(startLabel);
+        
+        
         startGameFrame.setVisible(true);
         return startGameFrame;
     }
