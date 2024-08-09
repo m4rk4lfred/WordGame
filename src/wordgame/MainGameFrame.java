@@ -2,7 +2,10 @@ package wordgame;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -11,6 +14,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,6 +31,12 @@ public class MainGameFrame extends JFrame {
   private int characterInsertionCounter;
   int numberOfContent = 10;
   int counterPerLetter = 0;
+  ImageIcon filledHeart = new ImageIcon("C:\\Users\\Lenovo\\Documents\\resourcesImages\\FilledHeart.png");
+  ImageIcon emptyHeart = new ImageIcon("C:\\Users\\Lenovo\\Documents\\resourcesImages\\EmptyHeart.png");
+  ImageIcon[] playerLives = {filledHeart, filledHeart, filledHeart};
+  JLabel[] heartLabel = new JLabel[3];
+  int lifeCount = 3;
+  
 
   //SO THIS IS THE CHARACTERS THAT WILL BE INSERTED IN THE GRID
   char[][] guessWordCharacters = {
@@ -65,9 +75,10 @@ public class MainGameFrame extends JFrame {
 		
 		
 		guessWordTextField = new JTextField();
+		guessWordTextField.setOpaque(true);
 		guessWordTextField.setHorizontalAlignment(SwingConstants.CENTER);
 		guessWordTextField.setFont(new Font("Haettenschweiler", Font.PLAIN, 28));
-		guessWordTextField.setBounds(10, 445, 466, 58);
+		guessWordTextField.setBounds(10, 450, 466, 58);
 		
 		
 		contentPane.add(guessWordTextField);
@@ -75,12 +86,16 @@ public class MainGameFrame extends JFrame {
 		
 		//CALLING THE GRID WHERE THE RANDOM LETTERS BELONG
 		wordBox();
+
+		playerLives();
 		
         //THIS WILL CHECK THE WORD IF THE USER ENTERED THE WORD
 		guessWordTextField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					checkWord();
+					playerLives();
+ 
 				}
 			}
 		});
@@ -102,7 +117,7 @@ public class MainGameFrame extends JFrame {
 
 	public void wordBox() {
         JPanel gridWordBoxContainer = new JPanel();
-        gridWordBoxContainer.setBounds(10, 21, 466, 400);
+        gridWordBoxContainer.setBounds(10, 40, 466, 400);
         gridWordBoxContainer.setBackground(Color.CYAN);
         gridWordBoxContainer.setLayout(new GridLayout(14, 14));
         //I WILL PUT ALL OF THE CHARACTERS IN THIS 2D ARRAY INCLUDING THE WORDS THAT I WANT TO PUT IN THE GRID
@@ -235,6 +250,7 @@ public class MainGameFrame extends JFrame {
 					while(isWrong){
                         guessWordTextField.setText("");
 	                    JOptionPane.showMessageDialog(null, "Wrong Answer", "WRONG", JOptionPane.ERROR_MESSAGE);
+						reducePlayerLives();
 						break;
 					}
 					while(isCorrect){
@@ -295,19 +311,6 @@ public class MainGameFrame extends JFrame {
 	}
 
 
-	/*public void setHorizontalWord(int letterPosition, int j, int characterInsertionToGrid , JPanel gridWordBox  ){
-		   if(characterInsertionCounter < guessWordCharacters[characterInsertionToGrid].length && characterInsertionToGrid < 9) {
-               JLabel wordBox = new JLabel(Character.toString(guessWordCharacters[characterInsertionToGrid][characterInsertionCounter]));
-			   wordBox.setForeground(Color.GREEN);
-			   wordBox.setHorizontalAlignment(SwingConstants.CENTER);
-			   wordBox.setFont(new Font("Haettenschweiler", Font.PLAIN, 28));
-			   gridWordBox.add(wordBox);
-		   }   
-		}*/
-
-
-	
-
 	public void setSoundEffects(){
 		try {
 			Clip clip = AudioSystem.getClip();
@@ -325,6 +328,53 @@ public class MainGameFrame extends JFrame {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR IN PLAYING THE MUSIC", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	public void playerLives(){
+		//THIS WILL BE THE LIVES OF THE PLAYER
+		//IF THE PLAYER ENTERED THE WRONG WORD THE LIVES WILL DECREASE
+		//IF THE LIVES IS 0 THE GAME WILL BE OVER
+		for (JLabel heart : heartLabel) {
+			if (heart != null) {
+				contentPane.remove(heart);
+			}
+		}
+	
+		// Revalidate and repaint to clear the old lives
+		contentPane.revalidate();
+		contentPane.repaint();
+
+		if(lifeCount > 0){
+
+		for(int heart = 0 ; heart < playerLives.length ; heart++){
+			
+			playerLives[heart].setImage(playerLives[heart].getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+	        heartLabel[heart] = new JLabel(playerLives[heart]);	
+			heartLabel[heart].setBounds(10 + (heart * 35), 5, 30, 30);
+
+			contentPane.add(heartLabel[heart]);
+
+		}
+	}
+
+	else{
+		JOptionPane.showMessageDialog(null, "Game Over", "GAME OVER", JOptionPane.ERROR_MESSAGE);
+		System.exit(0);
+	}
+
+	}
+
+	public void reducePlayerLives(){
+		
+        playerLives[lifeCount - 1] = emptyHeart;
+        heartLabel[lifeCount - 1].setIcon(playerLives[lifeCount - 1]);
+		lifeCount--;
+
+		System.out.println(playerLives[0]);
+		System.out.println(playerLives[1]);
+		System.out.println(playerLives[2]);
+		
+
 	}
 
  }
