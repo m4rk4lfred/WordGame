@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
+
 public class StartGame {
     private JFrame startGameFrame;
     private JPanel contentPane;
@@ -33,8 +35,10 @@ public class StartGame {
        
         contentPane.add(musicBackroundButton);
         
-        JLabel startLabel = new JLabel("");
-        startLabel.setBounds(50, 66, 385, 179);
+    
+        JLabel startLabel = new JLabel("PRESS ANY KEY TO START THE GAME");
+        startLabel.setBounds(100, 300, 300, 50);
+        
         contentPane.add(startLabel);
         
         
